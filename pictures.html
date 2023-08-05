@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+<style>
+#Progress_Status {
+    width: 50%;
+    background-color: #ddd;
+    display:none;
+}
+    
+#myprogressBar {
+    width: 2%;
+    height: 20px;
+    background-color: #4CAF50;
+}
+#hiddenButton {
+    display: none;
+}
+#Progress_Status2 {
+    width: 50%;
+    background-color: #ddd;
+    display:none;
+}
+    
+#myprogressBar2 {
+    width: 2%;
+    height: 20px;
+    background-color: #4CAF50;
+}
+</style>
+<head>
+<title>Picture input page</title>
+<meta name="description" content="accepts pictures and calls api">
+<script type = "module" src = "googlecloud.js">
+</script>
+
+</head>
+
+
+<body>
+    <h1>Input Pictures below</h1>
+    
+    <p> Input text here </p>
+
+    <form id="imageUploadForm" enctype="multipart/form-data">
+        <input type="file" id="imageFiles" name="images[]" multiple></input>
+        <button type ="button" id ="pls">Upload</button>
+    </form>
+    <div id="uploadStatus"> </div>
+    <div id="stat"> </div>
+    <div id="Progress_Status">
+        <div id="myprogressBar"></div>
+      </div>
+    <div id = "id2"></div>
+    <div id ="final"></div>
+    <div id="Progress_Status">
+        <div id="myprogressBar"></div>
+    </div>
+    <div id="image-container"></div>
+</body>
+</html>
