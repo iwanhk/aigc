@@ -10,10 +10,17 @@ const firebaseConfig = {
   messagingSenderId: "271111459915",
   appId: "1:271111459915:web:dde6b8c8bdfa23c863e9ce",
 };
-var checkpoint;
+export var inputmod = "people";
 var linklist = [];
 
-
+export function maledescriptor(){
+  inputmod = "male";
+  console.log("hi");
+  console.log(inputmod);
+}
+export function femaledescriptor(){
+  inputmod = "female";
+}
 //calls dreambooth api
 async function dreamboothjob(){
   let response = await fetch('https://api.dreamlook.ai/dreambooth', {
@@ -24,12 +31,12 @@ async function dreamboothjob(){
     },
     // body: '{\n        "steps": 925,\n        "learning_rate": 0.000003,\n        "enable_offset_noise": true,\n        "extract_lora": "original",\n        "instance_prompt": "photo of ukj person",\n        "base_model": "realistic-vision-v3-0",\n        "saved_model_format": "original",\n        "saved_model_weights_format": "safetensors",\n        "crop_method": "face",\n        "image_urls": [\n            "gs://nyxai-galactus-prd.appspot.com/dreambooth/fLilAfMpduWY16MCWxdDNnH68pz2/2023-7-29-17-15_m4xnsg8t2b/images/d918eb1e_7fl9229z_10.jpg",\n            "gs://nyxai-galactus-prd.appspot.com/dreambooth/fLilAfMpduWY16MCWxdDNnH68pz2/2023-7-29-17-15_m4xnsg8t2b/images/b62c91d2_0sqjrraw_9.jpg",\n            "gs://nyxai-galactus-prd.appspot.com/dreambooth/fLilAfMpduWY16MCWxdDNnH68pz2/2023-7-29-17-15_m4xnsg8t2b/images/b481b705_64yhra1i_8.jpg",\n            "gs://nyxai-galactus-prd.appspot.com/dreambooth/fLilAfMpduWY16MCWxdDNnH68pz2/2023-7-29-17-15_m4xnsg8t2b/images/86a8c745_lez8m8dk_7.jpg",\n            "gs://nyxai-galactus-prd.appspot.com/dreambooth/fLilAfMpduWY16MCWxdDNnH68pz2/2023-7-29-17-15_m4xnsg8t2b/images/7ce86e77_txm1hply_6.jpg",\n            "gs://nyxai-galactus-prd.appspot.com/dreambooth/fLilAfMpduWY16MCWxdDNnH68pz2/2023-7-29-17-15_m4xnsg8t2b/images/3fd572d0_rdgpd42g_5.jpg",\n            "gs://nyxai-galactus-prd.appspot.com/dreambooth/fLilAfMpduWY16MCWxdDNnH68pz2/2023-7-29-17-15_m4xnsg8t2b/images/acf116f0_9wmigxr1_4.jpg",\n            "gs://nyxai-galactus-prd.appspot.com/dreambooth/fLilAfMpduWY16MCWxdDNnH68pz2/2023-7-29-17-15_m4xnsg8t2b/images/da877ea9_nrd13l3s_3.jpg",\n            "gs://nyxai-galactus-prd.appspot.com/dreambooth/fLilAfMpduWY16MCWxdDNnH68pz2/2023-7-29-17-15_m4xnsg8t2b/images/88a5d4f5_bv6yo962_2.jpg",\n            "gs://nyxai-galactus-prd.appspot.com/dreambooth/fLilAfMpduWY16MCWxdDNnH68pz2/2023-7-29-17-15_m4xnsg8t2b/images/4c468b3b_otipzsd7_1.jpg"\n        ]\n    }',
     body: JSON.stringify({
-      'steps': 975,
+      'steps': 800,
       'learning_rate': 0.000003,
       'enable_offset_noise': true,
       'extract_lora': 'disabled',
-      'instance_prompt': 'photo of ukj person',
-      'base_model': 'realistic-vision-v3-0',
+      'instance_prompt': 'photo of ukj ' + inputmod,
+      'base_model': 'realistic-vision-v5-1',
       'saved_model_format': 'original',
       'saved_model_weights_format': 'safetensors',
       'crop_method': 'face',
@@ -54,7 +61,7 @@ export async function uploadImages() {
   //getting file input from user
   const fileInput = document.getElementById("imageFiles");
   const files = fileInput.files;
-  if (files.length <1) {
+  if (files.length <5) {
       alert("Please select  more images to upload.");
       return;
   }
@@ -91,11 +98,20 @@ export async function uploadImages() {
     await sleep(5000);
     stat = await checkstatus('dreambooth', jobid)
   }
+  //
+  // CHANGE THE LOCATION HERE
+  //
   //getting dreambooth checkpoint for image gen
   let checkpointid = await checkpointget(jobid);
   const upload2 = document.getElementById("final");
   upload2.textContent = "Image generate started";
-  generate(checkpointid);
+  await generate(checkpointid,"a wild west photo of ukj wearing a cowboy outfit, the forbidden palace in background, full body photo, black and white photo, grainy photo, taken with a old camera, shot in the 1700s, natural face, face of a model, looking at camera, award winning photo, detailed clothing, cinematic lighting, "+inputmod);
+  upload2.textContent = "Second Image generate started";
+  await generate(checkpointid,"cyberpunk photo of ukj wearing a black leather jacket, nighttime, full body, cyberpunk theme, (forbidden palace in background:1.1), looking at camera, full body, natural face, face of a model, studio quality, 8k, hdr, smooth, high resolution, award winning photo, detailed clothing, smooth skin, cinematic lighting, neon lights, synthwave, detailed background, neon colors, looking at the camera, front lighting, centered, "+inputmod);
+  upload2.textContent = "Third generate started";
+  await generate(checkpointid, "detailed photo of ukj in steampunk mechanical armour, full body, Dieselpunk style, steampunk style, steampunk style forbidden palace in the background, Retrofuturism, masterpiece, natural face, face of a model, photorealistic, detailed background, steampunk blueprint, dynamic pose, centered, baroque ornate, leather, armor, bronze, gold, diamond, (Epic composition, epic proportion, epic fantasy), cinematic light, standing in front of the steampunk forbidden palace, detailed sky, 8k, "+inputmod);
+  upload2.textContent = "Fourth generate started";
+  await generate(checkpointid, "ancient photo of ukj wearing a Chinese robe, forbidden palace in the background, masterpiece, full body, ancient china style, in ancient china, natural face, face of a model, studio quality, hdr, smooth, high resolution, award winning photo, detailed clothing, smooth skin, cinematic lighting, looking at the camera, centered, photorealistic, detailed background, bright sky, "+inputmod);
 } 
 
 export async function checkpointget(jobid){
@@ -145,17 +161,25 @@ export async function checkstatus(jobtype, idvar){
 }
 // test checkpoint: ckp_3ab44e7a
 //functions to generate images 
-export async function generate(checkpointid){
+export async function generate(checkpointid, prompt){
   let response= await fetch('https://api.dreamlook.ai/image_gen', {
   method: 'POST',
   headers: {
     'content-type': 'application/json',
     'authorization': 'Bearer dl-DB09B60A8F9A4E4089B79B4D5EB8626F'
   },
-  // body: '{\n    "prompt": "high quality photo of ukj in an suit standing under the northern lights, one person, natural face, face of a model, looking at camera, full body, studio quality, 4 k, hdr, smooth, sharp focus, high resolution, award winning photo, detailed clothing, smooth skin, cinematic lighting",\n    "negative_prompt": "nudity, amputee, bad anatomy, blurry, fuzzy, disfigured, misshaped, mutant, deformed, bad art, out of frame, off center",\n    "num_samples": 8,\n    "width": 768,\n    "height": 1024,\n    "num_inference_steps": 20,\n    "enable_hrf": true,\n    "scheduler_type": "dpm++",\n    "seed": 42,\n    "model_type": "sd-v1",\n    "guidance_scale": 7.5,\n    "checkpoint_id": "ckp_44e69b4f"\n}',
+  
+  // WILD WEST: a wild west photo of ukj wearing a cowboy outfit, the forbidden palace in background, full body photo, black and white photo, grainy photo, taken with a old camera, shot in the 1700s, natural face, face of a model, looking at camera, award winning photo, detailed clothing, cinematic lighting
+  // 8.5 guidance45
+  // CYBERPUNK: cyberpunk photo of ukj wearing a black leather jacket, nighttime, full body, cyberpunk theme, (forbidden palace in background:1.1), looking at camera, full body, natural face, face of a model, studio quality, 8k, hdr, smooth, high resolution, award winning photo, detailed clothing, smooth skin, cinematic lighting, neon lights, synthwave, detailed background, neon colors, looking at the camera, front lighting, centered
+  // 8.5 guidance
+  //steampunk: detailed photo of ukj in steampunk mech armour, gorgeous, Dieselpunk style, steampunk style, steampunk style forbidden palace in the background, Retrofuturism, masterpiece, natural face, smooth face, detailed face, photorealistic, detailed background, steampunk blueprint, dynamic pose, centered, baroque ornate, leather, armor, bronze, gold, diamond, (Epic composition, epic proportion, epic fantasy), cinematic light, standing in front of the steampunk forbidden palace, detailed sky, 8k
+  // 8.5
+
+  //out of frame, lowres,pixelated, text, error, cropped, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, out of frame, extra fingers, mutated hands, ugly face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck
   body: JSON.stringify({
-    'prompt': 'high quality photo of ukj in an suit standing under the northern lights, one person, natural face, face of a model, looking at camera, full body, studio quality, 4 k, hdr, smooth, sharp focus, high resolution, award winning photo, detailed clothing, smooth skin, cinematic lighting',
-    'negative_prompt': 'nudity, amputee, bad anatomy, blurry, fuzzy, disfigured, misshaped, mutant, deformed, bad art, out of frame, off center',
+    'prompt': prompt,
+    'negative_prompt' : "inside, nudity, out of frame, lowres, pixelated, text, error, cropped, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, out of frame, extra fingers, mutated hands, ugly face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, blurry background, misformed buildings",
     'num_samples': 8,
     'width': 768,
     'height': 1024,
@@ -164,7 +188,7 @@ export async function generate(checkpointid){
     'scheduler_type': 'dpm++',
     'seed': -1,
     'model_type': 'sd-v1',
-    'guidance_scale': 8.0,
+    'guidance_scale': 8,
     'checkpoint_id': checkpointid
   })
 })
@@ -226,5 +250,9 @@ export const pls = document.getElementById("pls");
 pls.addEventListener('click', uploadImages, false);
 //uploadImages
 //generate('ckp_3ab44e7a')
-export const gen = document.getElementById("hiddenButton");
-gen.addEventListener('click', generate, false);
+//export const gen = document.getElementById("hiddenButton");
+//gen.addEventListener('click', generate, false);
+export const malebutton = document.getElementById("male");
+malebutton.addEventListener('click', maledescriptor);
+export const femalebutton = document.getElementById("female");
+femalebutton.addEventListener('click', femaledescriptor);
