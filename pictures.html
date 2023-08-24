@@ -34,6 +34,23 @@
             max-width: 50%;
             height: auto;
         }
+.scroll-container {
+  background-color: #333;
+  overflow: auto;
+  white-space: nowrap;
+  padding: 10px;
+}
+
+.scroll-container img {
+    width: 9rem;
+    height: 7rem;
+    object-fit: cover;
+    cursor: pointer;
+    margin: 0.5rem;
+}
+#results {
+    display:none;
+}
 </style>
 <head>
 <title>Picture input page</title>
@@ -45,15 +62,14 @@
 
 
 <body>
-    <h1>Input Pictures below</h1>
+    <h1> Take 10 Photos of your face from close up and Input Pictures below</h1>
     
-    <p> Input text here </p>
 
     <form id="imageUploadForm" enctype="multipart/form-data">
         <input type="file" id="imageFiles" name="images[]" multiple></input>
         <button type ="button" id ="pls">Upload</button>
     </form>
-
+    <p> Click on your gender first </p>
     <div class="image-container">
         <button type = "button" id = "male" >
             <img width="60" height="60" src="https://firebasestorage.googleapis.com/v0/b/dreambooth-ai.appspot.com/o/male.png?alt=media&token=fbba714b-6943-4cec-92be-0302b958a356">
@@ -72,6 +88,17 @@
     <div id="Progress_Status">
         <div id="myprogressBar"></div>
     </div>
-    <div id="image-container"></div>
+    <p>Click on the thumbnails to reveal the full picture, then click on the pictures you want. After you choose 3 pictures, click generate to generate the final pictures</p>
+    <div id = "results">
+    <img id = "main">
+    <div class = "scroll-container" id = "image-container2"> </div>
+    <button type id = 'finalsubmit' >Submit Images</button>
+    </div>
+    <div id = "finalimgs"></div>
 </body>
+<script>
+ function showimg(src){
+    alert(src);
+    document.getElementById('main').src = src
+  }</script>
 </html>
