@@ -12,7 +12,10 @@ const firebaseConfig = {
 };
 export var inputmod = "people";
 var linklist = [];
-
+var resultlist=[];
+var finallist=[];
+var count = 0;
+var bglist=["https://firebasestorage.googleapis.com/v0/b/dreambooth-ai.appspot.com/o/test%20backgrounds%2Fchina1.png?alt=media&token=ebaab5aa-5649-4677-9db4-6c5ac8be1373","https://firebasestorage.googleapis.com/v0/b/dreambooth-ai.appspot.com/o/test%20backgrounds%2Fchina2.png?alt=media&token=6982eca4-2a8a-4440-aa32-a35b1ea4a7dc","https://firebasestorage.googleapis.com/v0/b/dreambooth-ai.appspot.com/o/test%20backgrounds%2Fchina3.png?alt=media&token=0628e887-c8cd-44fc-9f3b-f8d2c033eac7"];
 export function maledescriptor(){
   inputmod = "male";
   console.log("hi");
@@ -50,6 +53,7 @@ async function dreamboothjob(){
   return toreturn;
 }
 
+
 var checkpointidgen;
 // Initialize Firebase
 initializeApp(firebaseConfig);
@@ -61,7 +65,7 @@ export async function uploadImages() {
   //getting file input from user
   const fileInput = document.getElementById("imageFiles");
   const files = fileInput.files;
-  if (files.length <5) {
+  if (files.length <10) {
       alert("Please select  more images to upload.");
       return;
   }
@@ -105,14 +109,15 @@ export async function uploadImages() {
   let checkpointid = await checkpointget(jobid);
   const upload2 = document.getElementById("final");
   upload2.textContent = "Image generate started";
-  await generate(checkpointid,"a wild west photo of ukj wearing a cowboy outfit, the forbidden palace in background, full body photo, black and white photo, grainy photo, taken with a old camera, shot in the 1700s, natural face, face of a model, looking at camera, award winning photo, detailed clothing, cinematic lighting, "+inputmod);
+  await generate(checkpointid,"a wild west photo of ukj wearing a cowboy outfit, holstered gun, full body photo, black and white photo, grainy photo, taken with a old camera, shot in the 1700s, natural face, face of a model, looking at camera, award winning photo, detailed clothing, cinematic lighting, "+inputmod);
   upload2.textContent = "Second Image generate started";
-  await generate(checkpointid,"cyberpunk photo of ukj wearing a black leather jacket, nighttime, full body, cyberpunk theme, (forbidden palace in background:1.1), looking at camera, full body, natural face, face of a model, studio quality, 8k, hdr, smooth, high resolution, award winning photo, detailed clothing, smooth skin, cinematic lighting, neon lights, synthwave, detailed background, neon colors, looking at the camera, front lighting, centered, "+inputmod);
+  await generate(checkpointid,"old photo of ukj as a viking hunter wearing a worn fur cloak and leather tunic, viking helmet, dynamic pose, leather gloves, leather boots, full body, viking hunter, nordic theme, looking at camera, full body, natural face, face of a model, slim face, studio quality, 8k, hdr, smooth, high resolution, award-winning photo, taken in the 1300s, detailed clothing, smooth skin, cinematic lighting, "+inputmod);
   upload2.textContent = "Third generate started";
-  await generate(checkpointid, "detailed photo of ukj in steampunk mechanical armour, full body, Dieselpunk style, steampunk style, steampunk style forbidden palace in the background, Retrofuturism, masterpiece, natural face, face of a model, photorealistic, detailed background, steampunk blueprint, dynamic pose, centered, baroque ornate, leather, armor, bronze, gold, diamond, (Epic composition, epic proportion, epic fantasy), cinematic light, standing in front of the steampunk forbidden palace, detailed sky, 8k, "+inputmod);
+  await generate(checkpointid, "detailed photo of ukj in steampunk mechanical armour, (full body:1.1), Dieselpunk style, steampunk style, Retrofuturism, masterpiece, natural face, face of a model, slim face, photorealistic, detailed background, steampunk blueprint, dynamic pose, baroque ornate, leather, armor, bronze, gold, diamond, (Epic composition, epic proportion, epic fantasy), cinematic light, 8k, front lighting, looking at camera, "+inputmod);
   upload2.textContent = "Fourth generate started";
-  await generate(checkpointid, "ancient photo of ukj wearing a Chinese robe, forbidden palace in the background, masterpiece, full body, ancient china style, in ancient china, natural face, face of a model, studio quality, hdr, smooth, high resolution, award winning photo, detailed clothing, smooth skin, cinematic lighting, looking at the camera, centered, photorealistic, detailed background, bright sky, "+inputmod);
+  await generate(checkpointid, "detailed photo of ukj as royalty wearing traditional han chinese clothing, full body, looking at camera, full body, natural face, beautiful face, face of a model, slim face, dynamic pose, matching eyes, studio quality, 8k, hdr, smooth, high resolution, award winning photo, cinematic lighting, looking at the camera, "+inputmod);
 } 
+
 
 export async function checkpointget(jobid){
   var checkpointid;
@@ -133,6 +138,7 @@ export async function checkpointget(jobid){
   console.log(checkpointidgen);
   return checkpointidgen;
 }
+
 
 //api call to checkstatus of dreambooth/ image gen task
 export async function checkstatus(jobtype, idvar){
@@ -159,7 +165,8 @@ export async function checkstatus(jobtype, idvar){
   else{ return false;}
 
 }
-// test checkpoint: ckp_3ab44e7a
+
+
 //functions to generate images 
 export async function generate(checkpointid, prompt){
   let response= await fetch('https://api.dreamlook.ai/image_gen', {
@@ -201,11 +208,13 @@ while(stat === false){
   await sleep(5000);
   stat = await checkstatus('image-gen', jobid)
 }
+document.getElementById('results').style.display = 'block'; 
 await resultsget(jobid);
 }
 
 
 export async function resultsget(jobid){
+  resultlist=[]
   var checkpointid;
   let response = await fetch(`https://api.dreamlook.ai/jobs/image-gen/${jobid}`, {
     headers: {
@@ -221,31 +230,93 @@ export async function resultsget(jobid){
   console.log(data1);
   var imageurls= data1['generated_images'];
   console.log(imageurls);
-  var resultlist=[];
   for(let i = 0; i < imageurls.length;i++){
     var temp = imageurls[i];
     var url = temp['url'];
     resultlist.push(url);
   }
   console.log(resultlist);
-  const container = document.getElementById('image-container');
+  const container = document.getElementById('image-container2');
      
   for (let i = 0; i < resultlist.length; i++) {
       const img = document.createElement('img');
       img.src = resultlist[i];
+      img.addEventListener('click', function(){showimg(this.src)});
       container.appendChild(img);
   }
   return resultlist;
 }
+
+
+export function showimg(src){
+  document.getElementById('main').src = src;
+}
+//sleep function for updates
 function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export function testgen(){
+//test function 
+export async function testgen(){
+  alert("hi");
+
   document.getElementById('Progress_Status').style.display = 'block'; 
-  generate('ckp_3ab44e7a');
+  document.getElementById('results').style.display = 'block'; 
+  await resultsget("ig_a85d8cf4");
+  await resultsget("ig_31b63551");
+  await resultsget("ig_2e81a9dd");
+  //generate('ckp_b3b42655', "a wild west photo of ukj wearing a cowboy outfit, the forbidden palace in background, full body photo, black and white photo, grainy photo, taken with a old camera, shot in the 1700s, natural face, face of a model, looking at camera, award winning photo, detailed clothing, cinematic lighting");
 }
 
+
+export function updateimgs(){
+  count++;
+  if(count > 3){
+    alert("maximum images selected");
+    return;
+  }
+  console.log(count);
+  finallist.push(document.getElementById('main').src);
+  console.log(finallist);
+}
+
+
+export async function bgswap(){
+  const container = document.getElementById('finalimgs');
+  for(var i = 0; i < 3; i++){
+    console.log(i);
+    let finurl = await apicall(finallist[i], bglist[i]);
+    const img = document.createElement('img');
+    img.src = finurl;
+    container.appendChild(img);
+  }
+}
+
+async function apicall(imgurl, bgurl){
+  const form = new FormData();
+  form.append('output_type', 'cutout');
+  form.append('bg_blur', '0');
+  form.append('scale', 'fit');
+  form.append('format', 'PNG');
+  form.append('image_url', imgurl);
+  form.append('bg_image_url', bgurl);
+  let response = await fetch("https://api.picsart.io/tools/1.0/removebg",{
+    method: "POST",
+    headers: {
+      "x-picsart-api-key": "vjfYuCNcan0v4Ks6a5gybGARzWXAHngS",
+      'accept': 'application/json',
+    },
+    body: form
+  })
+  console.log(response);
+  let data = await response.json(); 
+  data = JSON.stringify(data);
+  data = JSON.parse(data);
+  console.log('bgAPI response', data); 
+  var data1 = data["data"];
+  var data2 = data1["url"];
+  return data2;
+}
 export const pls = document.getElementById("pls");
 pls.addEventListener('click', uploadImages, false);
 //uploadImages
@@ -256,3 +327,7 @@ export const malebutton = document.getElementById("male");
 malebutton.addEventListener('click', maledescriptor);
 export const femalebutton = document.getElementById("female");
 femalebutton.addEventListener('click', femaledescriptor);
+export const imageclick = document.getElementById("main");
+imageclick.addEventListener('click', updateimgs, false);
+export const submitimgs = document.getElementById("finalsubmit");
+submitimgs.addEventListener('click', bgswap, false);
