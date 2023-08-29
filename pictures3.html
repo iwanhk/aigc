@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+<style>
+#Progress_Status {
+    width: 50%;
+    background-color: #ddd;
+    display:none;
+}
+    
+#myprogressBar {
+    width: 2%;
+    height: 20px;
+    background-color: #4CAF50;
+}
+#hiddenButton {
+    display: none;
+}
+#Progress_Status2 {
+    width: 50%;
+    background-color: #ddd;
+    display:none;
+}
+    
+#myprogressBar2 {
+    width: 2%;
+    height: 20px;
+    background-color: #4CAF50;
+}
+.image-container {
+            display: flex;
+        }
+
+        .image-container img {
+            max-width: 50%;
+            height: auto;
+        }
+.scroll-container {
+  background-color: #333;
+  overflow: auto;
+  white-space: nowrap;
+  padding: 10px;
+}
+
+.scroll-container img {
+    width: 9rem;
+    height: 7rem;
+    object-fit: cover;
+    cursor: pointer;
+    margin: 0.5rem;
+}
+#results {
+    display:none;
+}
+</style>
+<head>
+<title>Picture input page</title>
+<meta name="description" content="accepts pictures and calls api">
+<script type = "module" src = "googlecloud3.js">
+</script>
+
+</head>
+
+
+<body>
+    <h1> Take 10 Photos of your face from close up and Input Pictures below</h1>
+    
+
+    <form id="imageUploadForm" enctype="multipart/form-data">
+        <input type="file" id="imageFiles" name="images[]" multiple></input>
+        <button type ="button" id ="pls">Upload</button>
+    </form>
+    <p> Click on your gender first </p>
+    <div class="image-container">
+        <button type = "button" id = "male" >
+            <img width="60" height="60" src="https://firebasestorage.googleapis.com/v0/b/dreambooth-ai.appspot.com/o/male.png?alt=media&token=fbba714b-6943-4cec-92be-0302b958a356">
+        </button>
+        <button type = "button" id = "female">
+            <img width="60" height="60" src="https://firebasestorage.googleapis.com/v0/b/dreambooth-ai.appspot.com/o/female.png?alt=media&token=73ccbb07-a450-4e07-b59e-692d1e6d8702">
+        </button>
+    </div>
+    <div id="uploadStatus"> </div>
+    <div id="stat"> </div>
+    <div id="Progress_Status">
+        <div id="myprogressBar"></div>
+      </div>
+    <div id = "id2"></div>
+    <div id ="final"></div>
+    <div id="Progress_Status">
+        <div id="myprogressBar"></div>
+    </div>
+    <p>Click on the thumbnails to reveal the full picture, then click on the pictures you want. After you choose 3 pictures, click generate to generate the final pictures</p>
+    <div id = "results">
+    <img id = "main">
+    <div class = "scroll-container" id = "image-container2"> </div>
+    <p>Chosen Images</p>
+    <div class = "scroll-container" id = "image-container3"> </div>
+    <button type id = 'reset' >Reset Images</button>
+    <button type id = 'finalsubmit' >Submit Images</button>
+    </div>
+
+    <div id = "finalimgs"></div>
+</body>
+</html>
